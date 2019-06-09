@@ -10,7 +10,7 @@ import { charger } from "power";
 // second page
 const cobIcon = document.getElementById("cobIcon");
 const carbsViewElements = document.getElementsByClassName("carbsView");
-const carbsViewBack = document.getElementById("back");
+const carbsViewBack = document.getElementById("backButton");
 
 cobIcon.onclick = function(evt){
   for(let i=0;i<carbsViewElements.length;i++){
@@ -18,7 +18,9 @@ cobIcon.onclick = function(evt){
   }
   //carbsBackground.style.visibility = "visible";
 };
-carbsViewBack.onclick = function(evt) {
+
+
+carbsViewBack.onactivate = function(evt) {
   for(let i=0;i<carbsViewElements.length;i++){
     carbsViewElements[i].style.display = "none";
   }

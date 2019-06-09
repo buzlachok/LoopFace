@@ -21,7 +21,7 @@
     <rect id="carbsBackground" class="carbsView"/>
 
     <rect id="back" class="carbsView" pointer-events="visible"/>
-    <text id="backText" class="carbsView">back</text>
+    <text id="backText" class="carbsView">Upload carbs:</text>
 
     <text id="isOk" class="ok">ok</text>
 
@@ -37,7 +37,12 @@
       <set href="#text" attributeName="fill" to="black" />
     </use>
 
-    <use id="sendButton" class="carbsView" href="#square-button" x="50" y="225" height="75" width="200" fill="black">
+    <use id="backButton" class="carbsView" href="#square-button" x="10" y="225" height="75" width="125" fill="black">
+      <set href="#text" attributeName="text-buffer" to="back" />
+      <set href="#text" attributeName="fill" to="black" />
+    </use>
+
+    <use id="sendButton" class="carbsView" href="#square-button" x="165" y="225" height="75" width="125" fill="black">
       <set href="#text" attributeName="text-buffer" to="send" />
       <set href="#text" attributeName="fill" to="black" />
     </use>
