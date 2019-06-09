@@ -35,7 +35,7 @@ settingsStorage.onchange = (evt) => {
     queryNightscout();
   } else {
     if (evt.key == "hashedApiSecret"){
-
+      hashedApiSecret = JSON.parse(settingsStorage.getItem('hashedApiSecret')).name;
     } else {
       let key = evt.key;
       let value = JSON.parse(evt.newValue);
@@ -126,4 +126,54 @@ function parseNsData(data){
   }
   return nightscoutData;
 
+}
+
+
+// SEND CARBS TO NIGHTSCOUT
+
+function sendCarbsToNightscout(url, data) {
+  let httpData;
+  httpData = {
+    "enteredBy": "Fitbit",
+    "reason": "Carb Correction",
+    "carbs": data,
+    "secret": apiHash
+  };
+
+  // Default options are marked with *
+  return fetch(url, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, cors, *same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    //referrer: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify(httpData), // body data type must match "Content-Type" header
+  })
+      .then(response => response.json()); // parses JSON response into native Javascript objects
+
+}
+
+// SICHERSTELLEN DASS WIRKLICH HOCHGELADEN WURDE
+function sendResponseToDevice(response) {
+  let isUploaded = false;
+
+  try {
+    if (response[0]["enteredBy"] == "Fitbit"){
+      isUploaded = true;
+    }
+  } catch (err){
+    console.log(err);
+  }
+
+  if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+    messaging.peerSocket.send({
+      type: "nsResponse",
+      isOk: isUploaded
+    });
+  }
 }
