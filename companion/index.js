@@ -14,21 +14,27 @@ const API_ENDPOINT = "/api/v1/devicestatus.json";
 var backgroundColor;
 var textColor;
 var nightscoutUrl = null;
+var hashedApiSecret = null;
 
 nightscoutUrl = (JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name) + API_ENDPOINT;
+hashedApiSecret = (JSON.parse(settingsStorage).getItem('hashedApiSecret')).name;
 
 settingsStorage.onchange = (evt) => {
   if(evt.key == "nightscoutSiteName"){
     nightscoutUrl = JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name + API_ENDPOINT;
     queryNightscout();
   } else {
-    let key = evt.key;
-    let value = JSON.parse(evt.newValue);
-    sendDataToDevice({
-      "type": "settings",
-      "key": key,
-      "value": value
-    });
+    if (evt.key == "hashedApiSecret"){
+
+    } else {
+      let key = evt.key;
+      let value = JSON.parse(evt.newValue);
+      sendDataToDevice({
+        "type": "settings",
+        "key": key,
+        "value": value
+      });
+    }
   }
 }
 
@@ -45,7 +51,7 @@ function sendDataToDevice(data){
 // Communicate with clockface
 
 messaging.peerSocket.onopen = () => {
-  nightscoutUrl = (JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name) + API_ENDPOINT;
+  //nightscoutUrl = (JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name) + API_ENDPOINT;
   queryNightscout();
 }
 

@@ -32,6 +32,7 @@ function ClockfaceSettings(props) {
           ]}
         />
         <TextInput title="NightscoutUrl" label="Nightscout URL:" settingsKey="nightscoutSiteName"/>
+        <TextInput title="ApiSecret" label="Api Secret (hashed):" settingsKey="hashedApiSecret"/>
       </Section>
     </Page>
   );
