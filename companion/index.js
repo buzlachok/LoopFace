@@ -2,9 +2,9 @@ import * as messaging from "messaging";
 import { settingsStorage } from "settings";
 import { me } from "companion";
 
-// update every 5 minutes
-//const minute = 1000 * 60;
-//var intervalID = setInterval(queryNightscout(), 5*minute);
+// DEBUG
+
+//
 const second = 1000;
 
 
@@ -132,6 +132,7 @@ function parseNsData(data){
       };
     } catch (err) {
       nightscoutData = null;
+      console.log("unable to download ns data");
     }
     if (i == 10){
       nightscoutData = {
@@ -191,7 +192,7 @@ function sendResponseToDevice(response) {
   if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
     messaging.peerSocket.send({
       type: "nsResponse",
-      isOk: isUploaded
+      isOk: isUploaded,
     });
   }
 }

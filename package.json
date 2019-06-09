@@ -29,7 +29,8 @@
   },
   "dependencies": {
     "@fitbit/sdk-cli": "^1.6.0",
-    "io-ts": "^1.8.2"
+    "io-ts": "^1.8.2",
+    "js-sha1": "^0.6.0"
   },
   "scripts": {
     "build": "fitbit-build"

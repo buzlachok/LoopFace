@@ -2,6 +2,7 @@
   
   
   <rect id="bgColor"/>
+  <rect id="changeToCarbsView" pointer-events="visible"/>
   <svg class="clockHalf">
     <text class="text" id="clockDisplay">00:00</text>
     <rect class="text" id="batteryLine" />
@@ -48,5 +49,34 @@
     </use>
     
   </svg>
+
+  <svg id="popup" display="none">
+
+    <!-- Black background -->
+    <rect class="full-size" fill="fb-black" />
+
+    <!-- Title and text -->
+    <use href="#mixed-text-center-mid" class="dialog-mixed-text" id="confirmText" fill="fb-white">
+      <set href="#top-padding" attributeName="display" to="none" />
+      <set href="#header/text" attributeName="text-buffer" to="Confirm" />
+      <set href="#header/text" attributeName="fill" to="fb-magenta"/>
+      <set href="#copy/text" attributeName="text-buffer" to="Do you really want to upload ??? of carbs to nightscout?" />
+      <set href="#bottom-padding" attributeName="display" to="none" />
+    </use>
+
+    <!-- Left button -->
+    <use id="btnLeft" class="dialog-half-button-left confirmPopup" href="#square-button-neutral">
+      <set href="#text" attributeName="text-buffer" to="Cancel" />
+      <set href="#text" attributeName="text-anchor" to="middle" />
+    </use>
+
+    <!-- Right button -->
+    <use id="btnRight" class="dialog-half-button-right confirmPopup" href="#square-button-negative">
+      <set href="#text" attributeName="text-buffer" to="Send" />
+      <set href="#text" attributeName="text-anchor" to="middle" />
+    </use>
+  </svg>
 </svg>
+
+
 
