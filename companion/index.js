@@ -16,8 +16,18 @@ var textColor;
 var nightscoutUrl = null;
 var hashedApiSecret = null;
 
-nightscoutUrl = (JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name) + API_ENDPOINT;
-hashedApiSecret = (JSON.parse(settingsStorage).getItem('hashedApiSecret')).name;
+try {
+  nightscoutUrl = (JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name) + API_ENDPOINT;
+} catch(err){
+  console.log("no nightscout url set");
+}
+
+try {
+  hashedApiSecret = JSON.parse(settingsStorage.getItem('hashedApiSecret')).name;
+} catch (err){
+  console.log("no hashed api secret set");
+}
+
 
 settingsStorage.onchange = (evt) => {
   if(evt.key == "nightscoutSiteName"){
