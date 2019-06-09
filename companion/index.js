@@ -5,19 +5,21 @@ import { me } from "companion";
 // update every 5 minutes
 //const minute = 1000 * 60;
 //var intervalID = setInterval(queryNightscout(), 5*minute);
+const second = 1000;
 
 
-
+//Initialize
+var lastSendDate = new Date(2018, 1, 1, 1, 1, 1, 1);
 
 // Apply Settings NEEDS WORK !!!!!!!!
 const API_ENDPOINT = "/api/v1/devicestatus.json";
-var backgroundColor;
-var textColor;
+var nightscoutBase = null;
 var nightscoutUrl = null;
 var hashedApiSecret = null;
 
 try {
-  nightscoutUrl = (JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name) + API_ENDPOINT;
+  nightscoutBase = JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name;
+  nightscoutUrl = nightscoutBase + API_ENDPOINT;
 } catch(err){
   console.log("no nightscout url set");
 }
@@ -31,7 +33,8 @@ try {
 
 settingsStorage.onchange = (evt) => {
   if(evt.key == "nightscoutSiteName"){
-    nightscoutUrl = JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name + API_ENDPOINT;
+    nightscoutBase = JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name;
+    nightscoutUrl = nightscoutBase + API_ENDPOINT;
     queryNightscout();
   } else {
     if (evt.key == "hashedApiSecret"){
@@ -46,7 +49,7 @@ settingsStorage.onchange = (evt) => {
       });
     }
   }
-}
+};
 
 function sendDataToDevice(data){
   if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
@@ -63,18 +66,29 @@ function sendDataToDevice(data){
 messaging.peerSocket.onopen = () => {
   //nightscoutUrl = (JSON.parse(settingsStorage.getItem('nightscoutSiteName')).name) + API_ENDPOINT;
   queryNightscout();
-}
+};
 
 messaging.peerSocket.onerror = (err) => {
   console.log(`Connection error: ${err.code} - ${err.message}`);
-}
+};
 
 messaging.peerSocket.onmessage = (evt) => {
   console.log(JSON.stringify(evt.data));
   if(evt.data["getValues"] == true){
     queryNightscout();
+  } else {
+    let treatmentsUrl = nightscoutBase + "/api/v1/treatments.json";
+    let requestDate = Date.parse(evt.data["date"].toString());
+    let millisSinceLast = requestDate - lastSendDate;
+    console.log(millisSinceLast / second);
+    if(millisSinceLast > 5*second){
+      sendCarbsToNightscout(treatmentsUrl, evt.data["carbData"])
+          .then(data => sendResponseToDevice(data))// JSON-string from `response.json()` call;
+          .catch(error => sendResponseToDevice(error));
+      lastSendDate = new Date();
+    }
   }
-}
+};
 
 
 
@@ -96,16 +110,13 @@ function queryNightscout() {
 
 
 function parseNsData(data){
-  let minutesSinceValue;
   let nightscoutData;
   let iobRound;
   let cobRound;
   let dateOfValue;
-  let minutesAgoInt;
-  let minutesAgoStr;
   nightscoutData = null;
   let i = 0;
-  while(nightscoutData == null){
+  while(nightscoutData == null && i <= 10) {
     try {
       //minutesSinceValue = calculateMinutesAgo(data[0]["openaps"]["suggested"]["timestamp"]);
       iobRound = Math.round(data[i]["openaps"]["suggested"]["IOB"] * 10) / 10.0;
@@ -119,10 +130,15 @@ function parseNsData(data){
         "tick": data[i]["openaps"]["suggested"]["tick"],
         "dateOfValue": dateOfValue
       };
-    } catch(err){
+    } catch (err) {
       nightscoutData = null;
     }
-    i = i+1;
+    if (i == 10){
+      nightscoutData = {
+        "type": "error"
+      }
+    }
+    i = i + 1;
   }
   return nightscoutData;
 
@@ -137,7 +153,7 @@ function sendCarbsToNightscout(url, data) {
     "enteredBy": "Fitbit",
     "reason": "Carb Correction",
     "carbs": data,
-    "secret": apiHash
+    "secret": hashedApiSecret
   };
 
   // Default options are marked with *
@@ -161,6 +177,8 @@ function sendCarbsToNightscout(url, data) {
 // SICHERSTELLEN DASS WIRKLICH HOCHGELADEN WURDE
 function sendResponseToDevice(response) {
   let isUploaded = false;
+
+  console.log(JSON.stringify(response));
 
   try {
     if (response[0]["enteredBy"] == "Fitbit"){

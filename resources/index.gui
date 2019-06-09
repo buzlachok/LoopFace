@@ -18,24 +18,28 @@
   
   
   <svg>
-    <rect id="carbsBackground" class="carbsView" pointer-events="visible"/>
+    <rect id="carbsBackground" class="carbsView"/>
+
+    <rect id="back" class="carbsView" pointer-events="visible"/>
+    <text id="backText" class="carbsView">back</text>
+
     <text id="isOk" class="ok">ok</text>
 
-    <use id="plusButton" class="carbsView" href="#square-button" x="215" y="75" height="100" width="75" fill="white">
+    <use id="plusButton" class="carbsView" href="#square-button" x="215" y="75" height="100" width="75" fill="black">
       <set href="#text" attributeName="text-buffer" to="+" />
-      <set href="#text" attributeName="fill" to="white" />
+      <set href="#text" attributeName="fill" to="black" />
     </use>
 
     <text id="carbs" class="carbsView">0</text>
 
-    <use id="minusButton" class="carbsView" href="#square-button" x="5" y="75" height="100" width="75" fill="white">
+    <use id="minusButton" class="carbsView" href="#square-button" x="5" y="75" height="100" width="75" fill="black">
       <set href="#text" attributeName="text-buffer" to="-" />
-      <set href="#text" attributeName="fill" to="white" />
+      <set href="#text" attributeName="fill" to="black" />
     </use>
 
-    <use id="sendButton" class="carbsView" href="#square-button" x="50" y="225" height="75" width="200" fill="white">
+    <use id="sendButton" class="carbsView" href="#square-button" x="50" y="225" height="75" width="200" fill="black">
       <set href="#text" attributeName="text-buffer" to="send" />
-      <set href="#text" attributeName="fill" to="white" />
+      <set href="#text" attributeName="fill" to="black" />
     </use>
     
   </svg>
