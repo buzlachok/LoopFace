@@ -1,0 +1,43 @@
+<svg class="background" id="background">
+  
+  
+  <rect id="bgColor"/>
+  <svg class="clockHalf">
+    <text class="text" id="clockDisplay">00:00</text>
+    <rect class="text" id="batteryLine" />
+  </svg>
+  <svg class="bgHalf">
+    <text class="text" id="bg">000</text>
+    <text class="text" id="tick">+0</text>
+    <text class="text" id="iob">0.0</text>
+    <text class="text" id="cob">0.0</text>
+    <text class="text" id="minutesAgo">0m</text>
+    <image class="icon" id="cobIcon" href="img/hamburger.png" pointer-events="visible"/>
+    <image class="icon" id="iobIcon" href="img/syringe.png" />
+  </svg>
+  
+  
+  <svg>
+    <rect id="carbsBackground" class="carbsView" pointer-events="visible"/>
+    <text id="isOk" class="ok">ok</text>
+
+    <use id="plusButton" class="carbsView" href="#square-button" x="215" y="75" height="100" width="75" fill="white">
+      <set href="#text" attributeName="text-buffer" to="+" />
+      <set href="#text" attributeName="fill" to="white" />
+    </use>
+
+    <text id="carbs" class="carbsView">0</text>
+
+    <use id="minusButton" class="carbsView" href="#square-button" x="5" y="75" height="100" width="75" fill="white">
+      <set href="#text" attributeName="text-buffer" to="-" />
+      <set href="#text" attributeName="fill" to="white" />
+    </use>
+
+    <use id="sendButton" class="carbsView" href="#square-button" x="50" y="225" height="75" width="200" fill="white">
+      <set href="#text" attributeName="text-buffer" to="send" />
+      <set href="#text" attributeName="fill" to="white" />
+    </use>
+    
+  </svg>
+</svg>
+

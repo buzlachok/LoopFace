@@ -1,0 +1,37 @@
+{
+  "fitbit": {
+    "appUUID": "e8615ff6-f2a1-4bd8-857d-9554ed8b35f3",
+    "appType": "clockface",
+    "appDisplayName": "LoopFace",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "",
+    "requestedPermissions": [
+      "access_internet",
+      "run_background",
+      "access_heart_rate",
+      "access_activity"
+    ],
+    "buildTargets": [
+      "meson"
+    ],
+    "i18n": {
+      "en": {
+        "name": "LoopFace"
+      },
+      "de": {
+        "name": "LoopFace"
+      }
+    },
+    "defaultLanguage": "en-US"
+  },
+  "devDependencies": {
+    "@fitbit/sdk": "~3.1.0"
+  },
+  "dependencies": {
+    "@fitbit/sdk-cli": "^1.6.0",
+    "io-ts": "^1.8.2"
+  },
+  "scripts": {
+    "build": "fitbit-build"
+  }
+}
