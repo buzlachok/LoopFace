@@ -87,6 +87,11 @@
       <set href="#text" attributeName="text-anchor" to="middle" />
     </use>
   </svg>
+
+  <svg id="tempTargetView" display="none">
+    <rect class="full-size" fill="fb-black" />
+
+  </svg>
 </svg>
 
 
