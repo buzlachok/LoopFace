@@ -7,6 +7,14 @@
   display: none;
 }
 
+#changeToCarbsView {
+  x: 70%;
+  y: 70%;
+  width: 30%;
+  height: 30%;
+  fill: black;
+}
+
 #back {
   x: 0;
   y: 0;

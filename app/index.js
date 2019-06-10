@@ -8,7 +8,7 @@ import { charger } from "power";
 
 // NEEDS WORK NEEDS WORK
 // second page
-const cobIcon = document.getElementById("cobIcon");
+const cobIcon = document.getElementById("changeToCarbsView");
 const carbsViewElements = document.getElementsByClassName("carbsView");
 const carbsViewBack = document.getElementById("backButton");
 
@@ -55,12 +55,17 @@ const minutesAgoDisplay = document.getElementById("minutesAgo");
 messaging.peerSocket.onmessage = (evt) => {
   console.log(JSON.stringify(evt.data));
   if(evt.data["type"] == "nightscout"){
-    bgDisplay.text = evt.data["bg"];
-    tickDisplay.text = evt.data["tick"];
-    iobDisplay.text = evt.data["iob"];
-    cobDisplay.text = evt.data["cob"];
-    lastValueDate = evt.data["dateOfValue"];
-    minutesAgoDisplay.text = calculateMinutesAgo(lastValueDate) + "m";
+    try {
+      bgDisplay.text = evt.data["bg"];
+      tickDisplay.text = evt.data["tick"];
+      iobDisplay.text = evt.data["iob"];
+      cobDisplay.text = evt.data["cob"];
+      lastValueDate = evt.data["dateOfValue"];
+      minutesAgoDisplay.text = calculateMinutesAgo(lastValueDate) + "m";
+    } catch (err) {
+      console.log("couldn't update clockface from nightscout data");
+    }
+
   }
 
   if(evt.data["type"] == "nsResponse"){
@@ -72,6 +77,7 @@ messaging.peerSocket.onmessage = (evt) => {
     if(evt.data["key"] == "colorBackground"){
       let bgColor = document.getElementById("bgColor");
       bgColor.style.fill = evt.data["value"];
+      cobIcon.style.fill = evt.data["value"];
     }
     if(evt.data["key"] == "colorText"){
       let text = document.getElementsByClassName("text");
@@ -121,7 +127,12 @@ clock.ontick = (evt) => {
   clockDisplay.text = `${hours}:${mins}`;
   
   //update minutes since last value
-  minutesAgoDisplay.text = calculateMinutesAgo(lastValueDate) + "m";
+  try {
+    minutesAgoDisplay.text = calculateMinutesAgo(lastValueDate) + "m";
+  } catch (err) {
+    console.log(err);
+  }
+
 };
 
 function calculateMinutesAgo(date){
@@ -168,6 +179,7 @@ var carbs = 0;
 const plusButton = document.getElementById("plusButton");
 const minusButton = document.getElementById("minusButton");
 const carbDisplay = document.getElementById("carbs");
+const confirm = document.getElementById("popup");
 
 plusButton.onactivate = function(evt) {
   carbs++;
@@ -189,8 +201,29 @@ const sendButton = document.getElementById("sendButton");
 const isOkDisplay = document.getElementById("isOk");
 
 sendButton.onactivate = function(evt) {
-  sendCarbs();
+  showConfirmPopup();
 };
+
+function showConfirmPopup() {
+  confirm.style.display = "inline";
+
+  let btnLeft = confirm.getElementById("btnLeft");
+  let btnRight = confirm.getElementById("btnRight");
+
+  let confirmText  = confirm.getElementById("confirmText");
+  let confirmTextCopy =  confirmText.getElementById("copy");
+
+  confirmTextCopy.text = "Do you really want to upload " + carbs + "g of carbs to Nightscout?";
+
+  btnLeft.onclick = function(evt) {
+    confirm.style.display = "none";
+  };
+
+  btnRight.onclick = function(evt) {
+    confirm.style.display = "none";
+    sendCarbs();
+  }
+}
 
 function sendCarbs() {
   if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
