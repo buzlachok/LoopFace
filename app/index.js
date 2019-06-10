@@ -77,7 +77,7 @@ messaging.peerSocket.onmessage = (evt) => {
     if(evt.data["key"] == "colorBackground"){
       let bgColor = document.getElementById("bgColor");
       bgColor.style.fill = evt.data["value"];
-      cobDisplay.style.fill = evt.data["value"];
+      cobIcon.style.fill = evt.data["value"];
     }
     if(evt.data["key"] == "colorText"){
       let text = document.getElementsByClassName("text");

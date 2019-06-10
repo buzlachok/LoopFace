@@ -2,12 +2,13 @@
   
   
   <rect id="bgColor"/>
-  <rect id="changeToCarbsView" pointer-events="visible"/>
+
   <svg class="clockHalf">
     <text class="text" id="clockDisplay">00:00</text>
     <rect class="text" id="batteryLine" />
   </svg>
   <svg class="bgHalf">
+    <rect id="changeToCarbsView" pointer-events="visible"/>
     <text class="text" id="bg">000</text>
     <text class="text" id="tick">+0</text>
     <text class="text" id="iob">0.0</text>
