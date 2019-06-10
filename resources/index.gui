@@ -27,15 +27,25 @@
 
     <text id="isOk" class="ok">ok</text>
 
-    <use id="plusButton" class="carbsView" href="#square-button" x="215" y="75" height="100" width="75" fill="black">
-      <set href="#text" attributeName="text-buffer" to="+" />
+    <use id="plusButton" class="carbsView" href="#square-button" x="215" y="75" height="75" width="75" fill="black">
+      <set href="#text" attributeName="text-buffer" to="+1" />
+      <set href="#text" attributeName="fill" to="black" />
+    </use>
+
+    <use id="plusFiveButton" class="carbsView" href="#square-button" x="215" y="150" height="75" width="75" fill="black">
+      <set href="#text" attributeName="text-buffer" to="+5" />
       <set href="#text" attributeName="fill" to="black" />
     </use>
 
     <text id="carbs" class="carbsView">0</text>
 
-    <use id="minusButton" class="carbsView" href="#square-button" x="5" y="75" height="100" width="75" fill="black">
-      <set href="#text" attributeName="text-buffer" to="-" />
+    <use id="minusButton" class="carbsView" href="#square-button" x="5" y="75" height="75" width="75" fill="black">
+      <set href="#text" attributeName="text-buffer" to="-1" />
+      <set href="#text" attributeName="fill" to="black" />
+    </use>
+
+    <use id="minusFiveButton" class="carbsView" href="#square-button" x="5" y="150" height="75" width="75" fill="black">
+      <set href="#text" attributeName="text-buffer" to="-5" />
       <set href="#text" attributeName="fill" to="black" />
     </use>
 

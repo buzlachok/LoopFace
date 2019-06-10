@@ -2,10 +2,10 @@ import * as messaging from "messaging";
 import { settingsStorage } from "settings";
 import { me } from "companion";
 
-// DEBUG
-
 //
 const second = 1000;
+
+//DEBUG
 
 
 //Initialize
@@ -14,7 +14,7 @@ var lastSendDate = new Date(2018, 1, 1, 1, 1, 1, 1);
 // Apply Settings NEEDS WORK !!!!!!!!
 const API_ENDPOINT = "/api/v1/devicestatus.json";
 var nightscoutBase = null;
-var nightscoutUrl = null;
+var nightscoutUrl = nightscoutBase + API_ENDPOINT;
 var hashedApiSecret = null;
 
 try {
@@ -95,17 +95,21 @@ messaging.peerSocket.onmessage = (evt) => {
 // Fetch the devicestatus data from nightscout
 function queryNightscout() {
   console.log("started queryNightscout: " + nightscoutUrl);
-  fetch(nightscoutUrl)
-  .then(function (response) {
-      response.json()
-      .then(function(data) {
-        var nightscoutData = parseNsData(data);
-        sendDataToDevice(nightscoutData);
-      });
-  })
-  .catch(function (err) {
-    console.log("Error fetching data: " + err);
-  });
+  if (nightscoutUrl != null){
+    fetch(nightscoutUrl)
+        .then(function (response) {
+          response.json()
+              .then(function(data) {
+                var nightscoutData = parseNsData(data);
+                sendDataToDevice(nightscoutData);
+              });
+        })
+        .catch(function (err) {
+          console.log("Error fetching data: " + err);
+        });
+  } else {
+    console.log("nightscoutUrl is null");
+  }
 }
 
 

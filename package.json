@@ -30,7 +30,8 @@
   "dependencies": {
     "@fitbit/sdk-cli": "^1.6.0",
     "io-ts": "^1.8.2",
-    "js-sha1": "^0.6.0"
+    "js-sha1": "^0.6.0",
+    "simple-sha1": "^2.1.2"
   },
   "scripts": {
     "build": "fitbit-build"

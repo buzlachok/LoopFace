@@ -7,7 +7,7 @@
  * @license MIT
  */
 /*jslint bitwise: true */
-(function() {
+(function () {
   'use strict';
 
   var root = typeof window === 'object' ? window : {};
@@ -67,9 +67,9 @@
   function Sha1(sharedMemory) {
     if (sharedMemory) {
       blocks[0] = blocks[16] = blocks[1] = blocks[2] = blocks[3] =
-      blocks[4] = blocks[5] = blocks[6] = blocks[7] =
-      blocks[8] = blocks[9] = blocks[10] = blocks[11] =
-      blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
+          blocks[4] = blocks[5] = blocks[6] = blocks[7] =
+              blocks[8] = blocks[9] = blocks[10] = blocks[11] =
+                  blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
       this.blocks = blocks;
     } else {
       this.blocks = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -90,7 +90,7 @@
     if (this.finalized) {
       return;
     }
-    var notString = typeof(message) !== 'string';
+    var notString = typeof (message) !== 'string';
     if (notString && message.constructor === root.ArrayBuffer) {
       message = new Uint8Array(message);
     }
@@ -101,12 +101,12 @@
         this.hashed = false;
         blocks[0] = this.block;
         blocks[16] = blocks[1] = blocks[2] = blocks[3] =
-        blocks[4] = blocks[5] = blocks[6] = blocks[7] =
-        blocks[8] = blocks[9] = blocks[10] = blocks[11] =
-        blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
+            blocks[4] = blocks[5] = blocks[6] = blocks[7] =
+                blocks[8] = blocks[9] = blocks[10] = blocks[11] =
+                    blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
       }
 
-      if(notString) {
+      if (notString) {
         for (i = this.start; index < length && i < 64; ++index) {
           blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
         }
@@ -165,9 +165,9 @@
       }
       blocks[0] = this.block;
       blocks[16] = blocks[1] = blocks[2] = blocks[3] =
-      blocks[4] = blocks[5] = blocks[6] = blocks[7] =
-      blocks[8] = blocks[9] = blocks[10] = blocks[11] =
-      blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
+          blocks[4] = blocks[5] = blocks[6] = blocks[7] =
+              blocks[8] = blocks[9] = blocks[10] = blocks[11] =
+                  blocks[12] = blocks[13] = blocks[14] = blocks[15] = 0;
     }
     blocks[14] = this.hBytes << 3 | this.bytes >>> 29;
     blocks[15] = this.bytes << 3;
@@ -178,12 +178,12 @@
     var a = this.h0, b = this.h1, c = this.h2, d = this.h3, e = this.h4;
     var f, j, t, blocks = this.blocks;
 
-    for(j = 16; j < 80; ++j) {
+    for (j = 16; j < 80; ++j) {
       t = blocks[j - 3] ^ blocks[j - 8] ^ blocks[j - 14] ^ blocks[j - 16];
-      blocks[j] =  (t << 1) | (t >>> 31);
+      blocks[j] = (t << 1) | (t >>> 31);
     }
 
-    for(j = 0; j < 20; j += 5) {
+    for (j = 0; j < 20; j += 5) {
       f = (b & c) | ((~b) & d);
       t = (a << 5) | (a >>> 27);
       e = t + f + e + 1518500249 + blocks[j] << 0;
@@ -210,7 +210,7 @@
       c = (c << 30) | (c >>> 2);
     }
 
-    for(; j < 40; j += 5) {
+    for (; j < 40; j += 5) {
       f = b ^ c ^ d;
       t = (a << 5) | (a >>> 27);
       e = t + f + e + 1859775393 + blocks[j] << 0;
@@ -237,7 +237,7 @@
       c = (c << 30) | (c >>> 2);
     }
 
-    for(; j < 60; j += 5) {
+    for (; j < 60; j += 5) {
       f = (b & c) | (b & d) | (c & d);
       t = (a << 5) | (a >>> 27);
       e = t + f + e - 1894007588 + blocks[j] << 0;
@@ -264,7 +264,7 @@
       c = (c << 30) | (c >>> 2);
     }
 
-    for(; j < 80; j += 5) {
+    for (; j < 80; j += 5) {
       f = b ^ c ^ d;
       t = (a << 5) | (a >>> 27);
       e = t + f + e - 899497514 + blocks[j] << 0;
@@ -304,25 +304,25 @@
     var h0 = this.h0, h1 = this.h1, h2 = this.h2, h3 = this.h3, h4 = this.h4;
 
     return HEX_CHARS[(h0 >> 28) & 0x0F] + HEX_CHARS[(h0 >> 24) & 0x0F] +
-           HEX_CHARS[(h0 >> 20) & 0x0F] + HEX_CHARS[(h0 >> 16) & 0x0F] +
-           HEX_CHARS[(h0 >> 12) & 0x0F] + HEX_CHARS[(h0 >> 8) & 0x0F] +
-           HEX_CHARS[(h0 >> 4) & 0x0F] + HEX_CHARS[h0 & 0x0F] +
-           HEX_CHARS[(h1 >> 28) & 0x0F] + HEX_CHARS[(h1 >> 24) & 0x0F] +
-           HEX_CHARS[(h1 >> 20) & 0x0F] + HEX_CHARS[(h1 >> 16) & 0x0F] +
-           HEX_CHARS[(h1 >> 12) & 0x0F] + HEX_CHARS[(h1 >> 8) & 0x0F] +
-           HEX_CHARS[(h1 >> 4) & 0x0F] + HEX_CHARS[h1 & 0x0F] +
-           HEX_CHARS[(h2 >> 28) & 0x0F] + HEX_CHARS[(h2 >> 24) & 0x0F] +
-           HEX_CHARS[(h2 >> 20) & 0x0F] + HEX_CHARS[(h2 >> 16) & 0x0F] +
-           HEX_CHARS[(h2 >> 12) & 0x0F] + HEX_CHARS[(h2 >> 8) & 0x0F] +
-           HEX_CHARS[(h2 >> 4) & 0x0F] + HEX_CHARS[h2 & 0x0F] +
-           HEX_CHARS[(h3 >> 28) & 0x0F] + HEX_CHARS[(h3 >> 24) & 0x0F] +
-           HEX_CHARS[(h3 >> 20) & 0x0F] + HEX_CHARS[(h3 >> 16) & 0x0F] +
-           HEX_CHARS[(h3 >> 12) & 0x0F] + HEX_CHARS[(h3 >> 8) & 0x0F] +
-           HEX_CHARS[(h3 >> 4) & 0x0F] + HEX_CHARS[h3 & 0x0F] +
-           HEX_CHARS[(h4 >> 28) & 0x0F] + HEX_CHARS[(h4 >> 24) & 0x0F] +
-           HEX_CHARS[(h4 >> 20) & 0x0F] + HEX_CHARS[(h4 >> 16) & 0x0F] +
-           HEX_CHARS[(h4 >> 12) & 0x0F] + HEX_CHARS[(h4 >> 8) & 0x0F] +
-           HEX_CHARS[(h4 >> 4) & 0x0F] + HEX_CHARS[h4 & 0x0F];
+        HEX_CHARS[(h0 >> 20) & 0x0F] + HEX_CHARS[(h0 >> 16) & 0x0F] +
+        HEX_CHARS[(h0 >> 12) & 0x0F] + HEX_CHARS[(h0 >> 8) & 0x0F] +
+        HEX_CHARS[(h0 >> 4) & 0x0F] + HEX_CHARS[h0 & 0x0F] +
+        HEX_CHARS[(h1 >> 28) & 0x0F] + HEX_CHARS[(h1 >> 24) & 0x0F] +
+        HEX_CHARS[(h1 >> 20) & 0x0F] + HEX_CHARS[(h1 >> 16) & 0x0F] +
+        HEX_CHARS[(h1 >> 12) & 0x0F] + HEX_CHARS[(h1 >> 8) & 0x0F] +
+        HEX_CHARS[(h1 >> 4) & 0x0F] + HEX_CHARS[h1 & 0x0F] +
+        HEX_CHARS[(h2 >> 28) & 0x0F] + HEX_CHARS[(h2 >> 24) & 0x0F] +
+        HEX_CHARS[(h2 >> 20) & 0x0F] + HEX_CHARS[(h2 >> 16) & 0x0F] +
+        HEX_CHARS[(h2 >> 12) & 0x0F] + HEX_CHARS[(h2 >> 8) & 0x0F] +
+        HEX_CHARS[(h2 >> 4) & 0x0F] + HEX_CHARS[h2 & 0x0F] +
+        HEX_CHARS[(h3 >> 28) & 0x0F] + HEX_CHARS[(h3 >> 24) & 0x0F] +
+        HEX_CHARS[(h3 >> 20) & 0x0F] + HEX_CHARS[(h3 >> 16) & 0x0F] +
+        HEX_CHARS[(h3 >> 12) & 0x0F] + HEX_CHARS[(h3 >> 8) & 0x0F] +
+        HEX_CHARS[(h3 >> 4) & 0x0F] + HEX_CHARS[h3 & 0x0F] +
+        HEX_CHARS[(h4 >> 28) & 0x0F] + HEX_CHARS[(h4 >> 24) & 0x0F] +
+        HEX_CHARS[(h4 >> 20) & 0x0F] + HEX_CHARS[(h4 >> 16) & 0x0F] +
+        HEX_CHARS[(h4 >> 12) & 0x0F] + HEX_CHARS[(h4 >> 8) & 0x0F] +
+        HEX_CHARS[(h4 >> 4) & 0x0F] + HEX_CHARS[h4 & 0x0F];
   };
 
   Sha1.prototype.toString = Sha1.prototype.hex;
