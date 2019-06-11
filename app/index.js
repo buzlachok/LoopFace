@@ -90,6 +90,10 @@ messaging.peerSocket.onmessage = (evt) => {
     showIfCarbsUploaded(evt.data);
   }
 
+  if(evt.data["type"] == "nsTempResponse") {
+      showIfTempTargetSet(evt.data);
+  }
+
   if(evt.data["type"] == "settings"){
     console.log(JSON.stringify(evt.data));
     if(evt.data["key"] == "colorBackground"){
@@ -235,10 +239,11 @@ const sendButton = document.getElementById("sendButton");
 const isOkDisplay = document.getElementById("isOk");
 
 sendButton.onactivate = function(evt) {
-  showConfirmPopup();
+  showConfirmPopup("carbs");
 };
 
-function showConfirmPopup() {
+function showConfirmPopup(carbsOrTarget) {
+  console.log("confirmation pop up function started");
   confirm.style.display = "inline";
 
   let btnLeft = confirm.getElementById("btnLeft");
@@ -247,7 +252,11 @@ function showConfirmPopup() {
   let confirmText  = confirm.getElementById("confirmText");
   let confirmTextCopy =  confirmText.getElementById("copy");
 
-  confirmTextCopy.text = "Do you really want to upload " + carbs + "g of carbs to Nightscout?";
+  if (carbsOrTarget == "carbs") {
+      confirmTextCopy.text = "Do you really want to upload " + carbs + "g of carbs to Nightscout?";
+  } else {
+      confirmTextCopy.text = "Do you really want to set temp target to " + target + " for " + targetMinutes + " m?";
+  }
 
   btnLeft.onclick = function(evt) {
     confirm.style.display = "none";
@@ -255,7 +264,11 @@ function showConfirmPopup() {
 
   btnRight.onclick = function(evt) {
     confirm.style.display = "none";
-    sendCarbs();
+    if (carbsOrTarget == "carbs") {
+        sendCarbs();
+    } else {
+        sendTempTarget();
+    }
   }
 }
 
@@ -264,9 +277,10 @@ function sendCarbs() {
     // Send the data to peer as a message
     let requestDate = new Date();
     messaging.peerSocket.send({
-      getValues: false,
-      carbData: carbs,
-      date: requestDate.toString()
+        getValues: false,
+        sendCarbs: true,
+        carbData: carbs,
+        date: requestDate.toString()
     });
     carbs = 0;
     updateCarbDisplay();
@@ -285,7 +299,7 @@ function showIfCarbsUploaded(data){
       isOkDisplay.style.display = "none";
       carbDisplay.style.display = "inline";
       carbsViewBackground.style.fill = "white";
-    }, 5000);
+    }, 3000);
   } else {
     console.log("carbs uploaded"); // do something to show it worked
     isOkDisplay.text = "uploaded";
@@ -318,6 +332,7 @@ const plusTarget = document.getElementById("plusTarget");
 const plusTimeTarget = document.getElementById("plusTimeTarget");
 const minusTarget = document.getElementById("minusTarget");
 const minusTimeTarget = document.getElementById("minusTimeTarget");
+const sendTarget = document.getElementById("sendTarget");
 
 const targetDisplay = document.getElementById("target");
 const targetMinutesDisplay = document.getElementById("targetMinutes");
@@ -348,12 +363,46 @@ minusTimeTarget.onclick = function(evt) {
   updateTargetDisplay();
 };
 
+sendTarget.onclick = function(evt) {
+  console.log("sendTarget button clicked");
+  showConfirmPopup("target");
+};
+
 
 function updateTargetDisplay(){
   targetDisplay.text = target;
   targetMinutesDisplay.text = targetMinutes + "m";
 }
 
-// Send to Nightscout
+// Send Target to Nightscout
 
+function sendTempTarget() {
+    if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+        // Send the data to peer as a message
+        let requestDate = new Date();
+        messaging.peerSocket.send({
+            getValues: false,
+            sendCarbs: false,
+            tempTarget: target,
+            tempTargetMinutes: targetMinutes,
+            date: requestDate.toString()
+        });
+    }
+}
 
+function showIfTempTargetSet(data) {
+    let tempTargetBackground = document.getElementById("tempTargetBackground");
+    if (data["isOk"] == false) {
+        tempTargetBackground.style.fill = "red";
+        setTimeout(function() {
+            tempTargetBackground.style.fill = "white";
+            tempTargetView.style.display = "none";
+        }, 3000);
+    } else {
+        tempTargetBackground.style.fill = "green";
+        setTimeout(function() {
+            tempTargetBackground.style.fill = "white";
+            tempTargetView.style.display = "none";
+        }, 3000);
+    }
+}
