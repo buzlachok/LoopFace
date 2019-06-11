@@ -1,92 +1,138 @@
 <svg class="background" id="background">
   
   
-  <rect id="bgColor"/>
+    <rect id="bgColor"/>
 
-  <svg class="clockHalf">
-    <text class="text" id="clockDisplay">00:00</text>
-    <rect class="text" id="batteryLine" />
-  </svg>
-  <svg class="bgHalf">
-    <rect id="changeToCarbsView" pointer-events="visible"/>
-    <text class="text" id="bg">000</text>
-    <text class="text" id="tick">+0</text>
-    <text class="text" id="iob">0.0</text>
-    <text class="text" id="cob">0.0</text>
-    <text class="text" id="minutesAgo">0m</text>
-    <image class="icon" id="cobIcon" href="img/hamburger.png" pointer-events="visible"/>
-    <image class="icon" id="iobIcon" href="img/syringe.png" />
-  </svg>
+    <svg class="clockHalf">
+        <text class="text" id="clockDisplay">00:00</text>
+        <rect class="text" id="batteryLine" />
+    </svg>
+    <svg class="bgHalf">
+        <rect id="changeToCarbsView" pointer-events="visible"/>
+        <rect id="changeToTempTargetView" pointer-events="visible"/>
+        <text class="text" id="bg">000</text>
+        <text class="text" id="tick">+0</text>
+        <text class="text" id="iob">0.0</text>
+        <text class="text" id="cob">0.0</text>
+        <text class="text" id="minutesAgo">0m</text>
+        <image class="icon" id="cobIcon" href="img/hamburger.png" pointer-events="visible"/>
+        <image class="icon" id="iobIcon" href="img/syringe.png" />
+    </svg>
   
   
-  <svg>
-    <rect id="carbsBackground" class="carbsView"/>
+    <svg>
+        <rect id="carbsBackground" class="carbsView"/>
 
-    <rect id="back" class="carbsView" pointer-events="visible"/>
-    <text id="backText" class="carbsView">Upload carbs:</text>
+        <rect id="back" class="carbsView" pointer-events="visible"/>
+        <text id="backText" class="carbsView">Upload carbs:</text>
 
-    <text id="isOk" class="ok">ok</text>
+        <text id="isOk" class="ok">ok</text>
 
-    <use id="plusButton" class="carbsView" href="#square-button" x="215" y="75" height="75" width="75" fill="black">
-      <set href="#text" attributeName="text-buffer" to="+1" />
-      <set href="#text" attributeName="fill" to="black" />
-    </use>
+        <use id="plusButton" class="carbsView" href="#square-button" x="215" y="75" height="75" width="75" fill="black">
+          <set href="#text" attributeName="text-buffer" to="+1" />
+          <set href="#text" attributeName="fill" to="black" />
+        </use>
 
-    <use id="plusFiveButton" class="carbsView" href="#square-button" x="215" y="150" height="75" width="75" fill="black">
-      <set href="#text" attributeName="text-buffer" to="+5" />
-      <set href="#text" attributeName="fill" to="black" />
-    </use>
+        <use id="plusFiveButton" class="carbsView" href="#square-button" x="215" y="150" height="75" width="75" fill="black">
+          <set href="#text" attributeName="text-buffer" to="+5" />
+          <set href="#text" attributeName="fill" to="black" />
+        </use>
 
-    <text id="carbs" class="carbsView">0</text>
+        <text id="carbs" class="carbsView">0</text>
 
-    <use id="minusButton" class="carbsView" href="#square-button" x="5" y="75" height="75" width="75" fill="black">
-      <set href="#text" attributeName="text-buffer" to="-1" />
-      <set href="#text" attributeName="fill" to="black" />
-    </use>
+        <use id="minusButton" class="carbsView" href="#square-button" x="5" y="75" height="75" width="75" fill="black">
+          <set href="#text" attributeName="text-buffer" to="-1" />
+          <set href="#text" attributeName="fill" to="black" />
+        </use>
 
-    <use id="minusFiveButton" class="carbsView" href="#square-button" x="5" y="150" height="75" width="75" fill="black">
-      <set href="#text" attributeName="text-buffer" to="-5" />
-      <set href="#text" attributeName="fill" to="black" />
-    </use>
+        <use id="minusFiveButton" class="carbsView" href="#square-button" x="5" y="150" height="75" width="75" fill="black">
+          <set href="#text" attributeName="text-buffer" to="-5" />
+          <set href="#text" attributeName="fill" to="black" />
+        </use>
 
-    <use id="backButton" class="carbsView" href="#square-button" x="10" y="225" height="75" width="125" fill="black">
-      <set href="#text" attributeName="text-buffer" to="back" />
-      <set href="#text" attributeName="fill" to="black" />
-    </use>
+        <use id="backButton" class="carbsView" href="#square-button" x="10" y="225" height="75" width="125" fill="black">
+          <set href="#text" attributeName="text-buffer" to="back" />
+          <set href="#text" attributeName="fill" to="black" />
+        </use>
 
-    <use id="sendButton" class="carbsView" href="#square-button" x="165" y="225" height="75" width="125" fill="black">
-      <set href="#text" attributeName="text-buffer" to="send" />
-      <set href="#text" attributeName="fill" to="black" />
-    </use>
-    
-  </svg>
+        <use id="sendButton" class="carbsView" href="#square-button" x="165" y="225" height="75" width="125" fill="black">
+          <set href="#text" attributeName="text-buffer" to="send" />
+          <set href="#text" attributeName="fill" to="black" />
+        </use>
 
-  <svg id="popup" display="none">
+    </svg>
 
-    <!-- Black background -->
-    <rect class="full-size" fill="fb-black" />
+    <svg id="tempTargetView" display="none">
 
-    <!-- Title and text -->
-    <use href="#mixed-text-center-mid" class="dialog-mixed-text" id="confirmText" fill="fb-white">
-      <set href="#top-padding" attributeName="display" to="none" />
-      <set href="#header/text" attributeName="text-buffer" to="Confirm" />
-      <set href="#header/text" attributeName="fill" to="fb-magenta"/>
-      <set href="#copy/text" attributeName="text-buffer" to="Do you really want to upload ??? of carbs to nightscout?" />
-      <set href="#bottom-padding" attributeName="display" to="none" />
-    </use>
+      <rect id="tempTargetBackground" class="full-size" fill="white" />
 
-    <!-- Left button -->
-    <use id="btnLeft" class="dialog-half-button-left confirmPopup" href="#square-button-neutral">
-      <set href="#text" attributeName="text-buffer" to="Cancel" />
-      <set href="#text" attributeName="text-anchor" to="middle" />
-    </use>
+      <rect id="bannerTarget" pointer-events="visible"/>
+      <text id="bannerTargetText">Set temp target:</text>
 
-    <!-- Right button -->
-    <use id="btnRight" class="dialog-half-button-right confirmPopup" href="#square-button-negative">
-      <set href="#text" attributeName="text-buffer" to="Send" />
-      <set href="#text" attributeName="text-anchor" to="middle" />
-    </use>
-  </svg>
+      <use id="plusTarget" href="#square-button" x="215" y="75" height="75" width="75" fill="black" pointer-events="visible">
+        <set href="#text" attributeName="text-buffer" to="+" />
+        <set href="#text" attributeName="fill" to="black" />
+      </use>
+
+      <use id="plusTimeTarget" href="#square-button" x="215" y="150" height="75" width="75" fill="black" pointer-events="visible">
+        <set href="#text" attributeName="text-buffer" to="+" />
+        <set href="#text" attributeName="fill" to="black" />
+      </use>
+
+      <text id="target" x="50%" y="125" text-anchor="middle" text-length="3">100</text>
+
+      <text id="targetMinutes" x="50%" y="200" text-anchor="middle" text-length="4">60m</text>
+
+      <use id="minusTarget" href="#square-button" x="5" y="75" height="75" width="75" fill="black" pointer-events="visible">
+        <set href="#text" attributeName="text-buffer" to="-" />
+        <set href="#text" attributeName="fill" to="black" />
+      </use>
+
+      <use id="minusTimeTarget" href="#square-button" x="5" y="150" height="75" width="75" fill="black" pointer-events="visible">
+        <set href="#text" attributeName="text-buffer" to="-" />
+        <set href="#text" attributeName="fill" to="black" />
+      </use>
+
+      <use id="backTargetButton" href="#square-button" x="10" y="225" height="75" width="125" fill="black" pointer-events="visible">
+        <set href="#text" attributeName="text-buffer" to="back" />
+        <set href="#text" attributeName="fill" to="black" />
+      </use>
+
+      <use id="sendTarget" href="#square-button" x="165" y="225" height="75" width="125" fill="black" pointer-events="visible">
+        <set href="#text" attributeName="text-buffer" to="send" />
+        <set href="#text" attributeName="fill" to="black" />
+      </use>
+
+    </svg>
+
+    <svg id="popup" display="none">
+
+        <!-- Black background -->
+        <rect class="full-size" fill="fb-black" />
+
+        <!-- Title and text -->
+        <use href="#mixed-text-center-mid" class="dialog-mixed-text" id="confirmText" fill="fb-white">
+          <set href="#top-padding" attributeName="display" to="none" />
+          <set href="#header/text" attributeName="text-buffer" to="Confirm" />
+          <set href="#header/text" attributeName="fill" to="fb-magenta"/>
+          <set href="#copy/text" attributeName="text-buffer" to="Do you really want to upload ??? of carbs to nightscout?" />
+          <set href="#bottom-padding" attributeName="display" to="none" />
+        </use>
+
+        <!-- Left button -->
+        <use id="btnLeft" class="dialog-half-button-left confirmPopup" href="#square-button-neutral">
+          <set href="#text" attributeName="text-buffer" to="Cancel" />
+          <set href="#text" attributeName="text-anchor" to="middle" />
+        </use>
+
+        <!-- Right button -->
+        <use id="btnRight" class="dialog-half-button-right confirmPopup" href="#square-button-negative">
+          <set href="#text" attributeName="text-buffer" to="Send" />
+          <set href="#text" attributeName="text-anchor" to="middle" />
+        </use>
+    </svg>
+
+
 </svg>
 
 
