@@ -10,23 +10,39 @@ import { charger } from "power";
 var lastValueDate;
 
 
-// second page
+// CHANGE PAGES
 const cobIcon = document.getElementById("changeToCarbsView");
 const carbsViewElements = document.getElementsByClassName("carbsView");
 const carbsViewBack = document.getElementById("backButton");
+const changeToTempTargetView = document.getElementById("changeToTempTargetView");
+const tempTargetView = document.getElementById("tempTargetView");
+const backFromTargetView = tempTargetView.getElementById("backTargetButton");
+const debugBack = document.getElementById("bannerTarget");
+
 
 cobIcon.onclick = function(evt){
   for(let i=0;i<carbsViewElements.length;i++){
     carbsViewElements[i].style.display = "inline";
   }
-  //carbsBackground.style.visibility = "visible";
 };
-
 
 carbsViewBack.onactivate = function(evt) {
   for(let i=0;i<carbsViewElements.length;i++){
     carbsViewElements[i].style.display = "none";
   }
+  carbs = 0;
+  updateCarbDisplay();
+};
+
+changeToTempTargetView.onclick = function(evt) {
+  tempTargetView.style.display = "inline";
+};
+
+backFromTargetView.onclick = function(evt) {
+  target = 100;
+  targetMinutes = 60;
+  updateTargetDisplay();
+  tempTargetView.style.display = "none";
 };
 
 //Initializing
@@ -290,5 +306,54 @@ function showIfCarbsUploaded(data){
     }
   }, 3000);
 }
+
+
+// TARGET VIEW
+
+// Interface:
+var target = 100;
+var targetMinutes = 60;
+
+const plusTarget = document.getElementById("plusTarget");
+const plusTimeTarget = document.getElementById("plusTimeTarget");
+const minusTarget = document.getElementById("minusTarget");
+const minusTimeTarget = document.getElementById("minusTimeTarget");
+
+const targetDisplay = document.getElementById("target");
+const targetMinutesDisplay = document.getElementById("targetMinutes");
+
+plusTarget.onclick = function(evt) {
+  if (target < 240){
+    target = target + 5;
+  }
+  updateTargetDisplay();
+};
+
+plusTimeTarget.onclick = function(evt) {
+  targetMinutes = targetMinutes + 5;
+  updateTargetDisplay();
+};
+
+minusTarget.onclick = function(evt) {
+  if(target >= 75){
+    target = target - 5;
+  }
+  updateTargetDisplay();
+};
+
+minusTimeTarget.onclick = function(evt) {
+  if(targetMinutes > 5) {
+    targetMinutes = targetMinutes - 5;
+  }
+  updateTargetDisplay();
+};
+
+
+function updateTargetDisplay(){
+  targetDisplay.text = target;
+  targetMinutesDisplay.text = targetMinutes + "m";
+}
+
+// Send to Nightscout
 
 

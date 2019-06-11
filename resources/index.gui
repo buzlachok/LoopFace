@@ -9,6 +9,7 @@
   </svg>
   <svg class="bgHalf">
     <rect id="changeToCarbsView" pointer-events="visible"/>
+    <rect id="changeToTempTargetView" pointer-events="visible"/>
     <text class="text" id="bg">000</text>
     <text class="text" id="tick">+0</text>
     <text class="text" id="iob">0.0</text>
@@ -89,7 +90,45 @@
   </svg>
 
   <svg id="tempTargetView" display="none">
-    <rect class="full-size" fill="fb-black" />
+
+    <rect class="full-size" fill="white" />
+
+    <rect id="bannerTarget" pointer-events="visible"/>
+    <text id="bannerTargetText">Set temp target:</text>
+
+    <use id="plusTarget" href="#square-button" x="215" y="75" height="75" width="75" fill="black" pointer-events="visible">
+      <set href="#text" attributeName="text-buffer" to="+5" />
+      <set href="#text" attributeName="fill" to="black" />
+    </use>
+
+    <use id="plusTimeTarget" href="#square-button" x="215" y="150" height="75" width="75" fill="black" pointer-events="visible">
+      <set href="#text" attributeName="text-buffer" to="+5" />
+      <set href="#text" attributeName="fill" to="black" />
+    </use>
+
+    <text id="target" x="50%" y="125" text-anchor="middle" text-length="3">100</text>
+
+    <text id="targetMinutes" x="50%" y="200" text-anchor="middle" text-length="4">60m</text>
+
+    <use id="minusTarget" href="#square-button" x="5" y="75" height="75" width="75" fill="black" pointer-events="visible">
+      <set href="#text" attributeName="text-buffer" to="-5" />
+      <set href="#text" attributeName="fill" to="black" />
+    </use>
+
+    <use id="minusTimeTarget" href="#square-button" x="5" y="150" height="75" width="75" fill="black" pointer-events="visible">
+      <set href="#text" attributeName="text-buffer" to="-5" />
+      <set href="#text" attributeName="fill" to="black" />
+    </use>
+
+    <use id="backTargetButton" href="#square-button" x="10" y="225" height="75" width="125" fill="black" pointer-events="visible">
+      <set href="#text" attributeName="text-buffer" to="back" />
+      <set href="#text" attributeName="fill" to="black" />
+    </use>
+
+    <use id="sendTarget" href="#square-button" x="165" y="225" height="75" width="125" fill="black" pointer-events="visible">
+      <set href="#text" attributeName="text-buffer" to="send" />
+      <set href="#text" attributeName="fill" to="black" />
+    </use>
 
   </svg>
 </svg>
