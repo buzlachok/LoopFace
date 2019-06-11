@@ -12,7 +12,8 @@
       "access_activity"
     ],
     "buildTargets": [
-      "meson"
+      "meson",
+      "gemini"
     ],
     "i18n": {
       "en": {
