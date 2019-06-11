@@ -6,30 +6,48 @@ import * as messaging from "messaging";
 import { battery } from "power";
 import { charger } from "power";
 
-// NEEDS WORK NEEDS WORK
-// second page
+// Initialize
+var lastValueDate;
+
+
+// CHANGE PAGES
 const cobIcon = document.getElementById("changeToCarbsView");
 const carbsViewElements = document.getElementsByClassName("carbsView");
 const carbsViewBack = document.getElementById("backButton");
+const changeToTempTargetView = document.getElementById("changeToTempTargetView");
+const tempTargetView = document.getElementById("tempTargetView");
+const backFromTargetView = tempTargetView.getElementById("backTargetButton");
+const debugBack = document.getElementById("bannerTarget");
+
 
 cobIcon.onclick = function(evt){
   for(let i=0;i<carbsViewElements.length;i++){
     carbsViewElements[i].style.display = "inline";
   }
-  //carbsBackground.style.visibility = "visible";
 };
-
 
 carbsViewBack.onactivate = function(evt) {
   for(let i=0;i<carbsViewElements.length;i++){
     carbsViewElements[i].style.display = "none";
   }
+  carbs = 0;
+  updateCarbDisplay();
+};
+
+changeToTempTargetView.onclick = function(evt) {
+  tempTargetView.style.display = "inline";
+};
+
+backFromTargetView.onclick = function(evt) {
+  target = 100;
+  targetMinutes = 60;
+  updateTargetDisplay();
+  tempTargetView.style.display = "none";
 };
 
 //Initializing
 //const background = document.getElementsByClassName("background");
 //const text = document.getElementsByClassName("text");
-var lastValueDate;
 
 messaging.peerSocket.onopen = () => {
   updateBatteryDisplay();
@@ -70,6 +88,10 @@ messaging.peerSocket.onmessage = (evt) => {
 
   if(evt.data["type"] == "nsResponse"){
     showIfCarbsUploaded(evt.data);
+  }
+
+  if(evt.data["type"] == "nsTempResponse") {
+      showIfTempTargetSet(evt.data);
   }
 
   if(evt.data["type"] == "settings"){
@@ -137,13 +159,13 @@ clock.ontick = (evt) => {
 
 function calculateMinutesAgo(date){
   let minutes = 99;
-  try {
+  if (date != null){
     let minute = 1000.0 * 60.0;
     let timeNow = new Date().getTime();
     let timeValue = Date.parse(date.toString());
     minutes = Math.round((timeNow - timeValue)/minute);
-  } catch (err) {
-    console.log(err);
+  } else {
+    console.log("date was null");
   }
   return minutes;
 }
@@ -178,17 +200,33 @@ var carbs = 0;
 
 const plusButton = document.getElementById("plusButton");
 const minusButton = document.getElementById("minusButton");
+const plusFiveButton = document.getElementById("plusFiveButton");
+const minusFiveButton = document.getElementById("minusFiveButton");
 const carbDisplay = document.getElementById("carbs");
 const confirm = document.getElementById("popup");
+const carbsViewBackground = document.getElementById("carbsBackground");
 
 plusButton.onactivate = function(evt) {
   carbs++;
+  updateCarbDisplay();
+};
+plusFiveButton.onactivate = function(evt) {
+  carbs = carbs + 5;
   updateCarbDisplay();
 };
 
 minusButton.onactivate = function(evt) {
   if(carbs > 0){
     carbs--;
+  }
+  updateCarbDisplay();
+};
+
+minusFiveButton.onactivate = function(evt) {
+  if(carbs >= 5){
+    carbs = carbs -5;
+  } else if (carbs > 0){
+    carbs = 0;
   }
   updateCarbDisplay();
 };
@@ -201,10 +239,11 @@ const sendButton = document.getElementById("sendButton");
 const isOkDisplay = document.getElementById("isOk");
 
 sendButton.onactivate = function(evt) {
-  showConfirmPopup();
+  showConfirmPopup("carbs");
 };
 
-function showConfirmPopup() {
+function showConfirmPopup(carbsOrTarget) {
+  console.log("confirmation pop up function started");
   confirm.style.display = "inline";
 
   let btnLeft = confirm.getElementById("btnLeft");
@@ -213,7 +252,11 @@ function showConfirmPopup() {
   let confirmText  = confirm.getElementById("confirmText");
   let confirmTextCopy =  confirmText.getElementById("copy");
 
-  confirmTextCopy.text = "Do you really want to upload " + carbs + "g of carbs to Nightscout?";
+  if (carbsOrTarget == "carbs") {
+      confirmTextCopy.text = "Do you really want to upload " + carbs + "g of carbs to Nightscout?";
+  } else {
+      confirmTextCopy.text = "Do you really want to set temp target to " + target + " for " + targetMinutes + " m?";
+  }
 
   btnLeft.onclick = function(evt) {
     confirm.style.display = "none";
@@ -221,7 +264,11 @@ function showConfirmPopup() {
 
   btnRight.onclick = function(evt) {
     confirm.style.display = "none";
-    sendCarbs();
+    if (carbsOrTarget == "carbs") {
+        sendCarbs();
+    } else {
+        sendTempTarget();
+    }
   }
 }
 
@@ -230,9 +277,10 @@ function sendCarbs() {
     // Send the data to peer as a message
     let requestDate = new Date();
     messaging.peerSocket.send({
-      getValues: false,
-      carbData: carbs,
-      date: requestDate.toString()
+        getValues: false,
+        sendCarbs: true,
+        carbData: carbs,
+        date: requestDate.toString()
     });
     carbs = 0;
     updateCarbDisplay();
@@ -243,29 +291,118 @@ function showIfCarbsUploaded(data){
   if(data["isOk"] == false){
     console.log("carbs not uploaded"); // do something to show it didnt work
     isOkDisplay.text = "error";
-    isOkDisplay.style.fill = "red";
+    isOkDisplay.style.fill = "black";
     isOkDisplay.style.display = "inline";
     carbDisplay.style.display = "none";
+    carbsViewBackground.style.fill = "red";
     setTimeout(function() {
       isOkDisplay.style.display = "none";
       carbDisplay.style.display = "inline";
-    }, 5000);
+      carbsViewBackground.style.fill = "white";
+    }, 3000);
   } else {
     console.log("carbs uploaded"); // do something to show it worked
     isOkDisplay.text = "uploaded";
-    isOkDisplay.style.fill = "green";
+    isOkDisplay.style.fill = "black";
     isOkDisplay.style.display = "inline";
     carbDisplay.style.display = "none";
+    carbsViewBackground.style.fill = "green";
     setTimeout(function() {
       isOkDisplay.style.display = "none";
       carbDisplay.style.display = "inline";
-    }, 3000);
-    setTimeout(function() {
-      for(let i=0;i<carbsViewElements.length;i++){
-        carbsViewElements[i].style.display = "none";
-      }
+      carbsViewBackground.style.fill = "white";
     }, 3000);
   }
+  //go back to main view
+  setTimeout(function() {
+    for(let i=0;i<carbsViewElements.length;i++){
+      carbsViewElements[i].style.display = "none";
+    }
+  }, 3000);
 }
 
 
+// TARGET VIEW
+
+// Interface:
+var target = 100;
+var targetMinutes = 60;
+
+const plusTarget = document.getElementById("plusTarget");
+const plusTimeTarget = document.getElementById("plusTimeTarget");
+const minusTarget = document.getElementById("minusTarget");
+const minusTimeTarget = document.getElementById("minusTimeTarget");
+const sendTarget = document.getElementById("sendTarget");
+
+const targetDisplay = document.getElementById("target");
+const targetMinutesDisplay = document.getElementById("targetMinutes");
+
+plusTarget.onclick = function(evt) {
+  if (target < 240){
+    target = target + 5;
+  }
+  updateTargetDisplay();
+};
+
+plusTimeTarget.onclick = function(evt) {
+  targetMinutes = targetMinutes + 5;
+  updateTargetDisplay();
+};
+
+minusTarget.onclick = function(evt) {
+  if(target >= 75){
+    target = target - 5;
+  }
+  updateTargetDisplay();
+};
+
+minusTimeTarget.onclick = function(evt) {
+  if(targetMinutes > 5) {
+    targetMinutes = targetMinutes - 5;
+  }
+  updateTargetDisplay();
+};
+
+sendTarget.onclick = function(evt) {
+  console.log("sendTarget button clicked");
+  showConfirmPopup("target");
+};
+
+
+function updateTargetDisplay(){
+  targetDisplay.text = target;
+  targetMinutesDisplay.text = targetMinutes + "m";
+}
+
+// Send Target to Nightscout
+
+function sendTempTarget() {
+    if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+        // Send the data to peer as a message
+        let requestDate = new Date();
+        messaging.peerSocket.send({
+            getValues: false,
+            sendCarbs: false,
+            tempTarget: target,
+            tempTargetMinutes: targetMinutes,
+            date: requestDate.toString()
+        });
+    }
+}
+
+function showIfTempTargetSet(data) {
+    let tempTargetBackground = document.getElementById("tempTargetBackground");
+    if (data["isOk"] == false) {
+        tempTargetBackground.style.fill = "red";
+        setTimeout(function() {
+            tempTargetBackground.style.fill = "white";
+            tempTargetView.style.display = "none";
+        }, 3000);
+    } else {
+        tempTargetBackground.style.fill = "green";
+        setTimeout(function() {
+            tempTargetBackground.style.fill = "white";
+            tempTargetView.style.display = "none";
+        }, 3000);
+    }
+}

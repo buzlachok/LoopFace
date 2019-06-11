@@ -15,6 +15,29 @@
   fill: black;
 }
 
+#changeToTempTargetView {
+  x: 0%;
+  y: 70%;
+  width: 30%;
+  height: 30%;
+  fill: black;
+}
+
+#bannerTarget {
+  x: 0;
+  y: 0;
+  width: 100%;
+  height: 20%;
+  fill: black;
+}
+
+#bannerTargetText {
+  x: 50%;
+  y: 15%;
+  text-anchor: middle;
+  fill: white;
+}
+
 #back {
   x: 0;
   y: 0;
@@ -41,6 +64,7 @@
 #carbs {
   x: 50%;
   y: 50%;
+  font-size: 60;
   text-length: 3;
   text-anchor: middle;
   fill: black;

@@ -2,10 +2,10 @@ import * as messaging from "messaging";
 import { settingsStorage } from "settings";
 import { me } from "companion";
 
-// DEBUG
-
 //
 const second = 1000;
+
+//DEBUG
 
 
 //Initialize
@@ -14,7 +14,7 @@ var lastSendDate = new Date(2018, 1, 1, 1, 1, 1, 1);
 // Apply Settings NEEDS WORK !!!!!!!!
 const API_ENDPOINT = "/api/v1/devicestatus.json";
 var nightscoutBase = null;
-var nightscoutUrl = null;
+var nightscoutUrl = nightscoutBase + API_ENDPOINT;
 var hashedApiSecret = null;
 
 try {
@@ -76,16 +76,24 @@ messaging.peerSocket.onmessage = (evt) => {
   console.log(JSON.stringify(evt.data));
   if(evt.data["getValues"] == true){
     queryNightscout();
-  } else {
-    let treatmentsUrl = nightscoutBase + "/api/v1/treatments.json";
-    let requestDate = Date.parse(evt.data["date"].toString());
-    let millisSinceLast = requestDate - lastSendDate;
-    console.log(millisSinceLast / second);
-    if(millisSinceLast > 5*second){
-      sendCarbsToNightscout(treatmentsUrl, evt.data["carbData"])
-          .then(data => sendResponseToDevice(data))// JSON-string from `response.json()` call;
-          .catch(error => sendResponseToDevice(error));
-      lastSendDate = new Date();
+  }
+  if(evt.data["getValues"] != true){
+    if(evt.data["sendCarbs"] == true){
+      let treatmentsUrl = nightscoutBase + "/api/v1/treatments.json";
+      let requestDate = Date.parse(evt.data["date"].toString());
+      let millisSinceLast = requestDate - lastSendDate;
+      console.log(millisSinceLast / second);
+      if(millisSinceLast > 5*second){
+        sendCarbsToNightscout(treatmentsUrl, evt.data["carbData"])
+            .then(data => sendResponseToDevice(data))// JSON-string from `response.json()` call;
+            .catch(error => sendResponseToDevice(error));
+        lastSendDate = new Date();
+      }
+    } else {
+      let tempTargetUrl = nightscoutBase + "/api/v1/treatments.json";
+      sendTempTargetToNightscout(tempTargetUrl, evt.data["tempTarget"], evt.data["tempTargetMinutes"])
+          .then(data => sendTempResponseToDevice(data))// JSON-string from `response.json()` call;
+          .catch(error => sendTempResponseToDevice(error));
     }
   }
 };
@@ -95,17 +103,21 @@ messaging.peerSocket.onmessage = (evt) => {
 // Fetch the devicestatus data from nightscout
 function queryNightscout() {
   console.log("started queryNightscout: " + nightscoutUrl);
-  fetch(nightscoutUrl)
-  .then(function (response) {
-      response.json()
-      .then(function(data) {
-        var nightscoutData = parseNsData(data);
-        sendDataToDevice(nightscoutData);
-      });
-  })
-  .catch(function (err) {
-    console.log("Error fetching data: " + err);
-  });
+  if (nightscoutUrl != null){
+    fetch(nightscoutUrl)
+        .then(function (response) {
+          response.json()
+              .then(function(data) {
+                var nightscoutData = parseNsData(data);
+                sendDataToDevice(nightscoutData);
+              });
+        })
+        .catch(function (err) {
+          console.log("Error fetching data: " + err);
+        });
+  } else {
+    console.log("nightscoutUrl is null");
+  }
 }
 
 
@@ -192,6 +204,64 @@ function sendResponseToDevice(response) {
   if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
     messaging.peerSocket.send({
       type: "nsResponse",
+      isOk: isUploaded,
+    });
+  }
+}
+
+
+// SEND TEMP TARGET TO NIGHTSCOUT
+
+function sendTempTargetToNightscout (url, target, minutes) {
+  console.log(url);
+  console.log(target);
+  console.log(minutes);
+
+  // anpassen für Temp Target
+  let httpData;
+  httpData = {
+    "enteredBy": "Fitbit",
+    "eventType": "Temporary Target",
+    "reason": "",
+    "targetTop": target,
+    "targetBottom": target,
+    "duration": minutes,
+    "notes": "set by LoopFace",
+    "secret": hashedApiSecret
+  };
+
+  return fetch(url, {
+    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    mode: 'cors', // no-cors, cors, *same-origin
+    cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: 'same-origin', // include, *same-origin, omit
+    headers: {
+      'Content-Type': 'application/json',
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    redirect: 'follow', // manual, *follow, error
+    //referrer: 'no-referrer', // no-referrer, *client
+    body: JSON.stringify(httpData), // body data type must match "Content-Type" header
+  })
+      .then(response => response.json()); // parses JSON response into native Javascript objects
+}
+
+function sendTempResponseToDevice(response){
+  let isUploaded = false;
+
+  console.log(JSON.stringify(response));
+
+  try {
+    if (response[0]["enteredBy"] == "Fitbit"){
+      isUploaded = true;
+    }
+  } catch (err){
+    console.log(err);
+  }
+
+  if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+    messaging.peerSocket.send({
+      type: "nsTempResponse",
       isOk: isUploaded,
     });
   }
