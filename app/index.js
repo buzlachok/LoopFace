@@ -8,7 +8,7 @@ import { charger } from "power";
 import { vibration } from "haptics";
 
 // Initialize
-var lastValueDate;
+var lastValueDate = new Date(2018,1,1);
 
 
 // CHANGE PAGES
@@ -167,6 +167,9 @@ function calculateMinutesAgo(date){
   } else {
     console.log("date was null");
   }
+  if (minutes > 99) {
+      minutes = 99;
+  }
   return minutes;
 }
 
@@ -300,11 +303,13 @@ function showIfCarbsUploaded(data){
     isOkDisplay.style.display = "inline";
     carbDisplay.style.display = "none";
     carbsViewBackground.style.fill = "red";
+    vibration.start("ring");
     setTimeout(function() {
       isOkDisplay.style.display = "none";
       carbDisplay.style.display = "inline";
       carbsViewBackground.style.fill = "white";
-    }, 3000);
+      vibration.stop();
+    }, 5000);
   } else {
     console.log("carbs uploaded"); // do something to show it worked
     isOkDisplay.text = "uploaded";
@@ -312,7 +317,7 @@ function showIfCarbsUploaded(data){
     isOkDisplay.style.display = "inline";
     carbDisplay.style.display = "none";
     carbsViewBackground.style.fill = "green";
-    vibration.start("confirmation");
+    vibration.start("confirmation-max");
     setTimeout(function() {
       isOkDisplay.style.display = "none";
       carbDisplay.style.display = "inline";
@@ -403,17 +408,19 @@ function showIfTempTargetSet(data) {
         targetDisplay.text = "err";
         targetMinutesDisplay.text = "";
         tempTargetBackground.style.fill = "red";
+        vibration.start("ring");
         setTimeout(function() {
             tempTargetBackground.style.fill = "white";
             tempTargetView.style.display = "none";
             targetDisplay.text = target;
             targetMinutesDisplay.text = targetMinutes;
-        }, 3000);
+            vibration.stop();
+        }, 5000);
     } else {
         tempTargetBackground.style.fill = "green";
         targetDisplay.text = "ok";
         targetMinutesDisplay.text = "";
-        vibration.start("confirmation");
+        vibration.start("confirmation-max");
         setTimeout(function() {
             tempTargetBackground.style.fill = "white";
             tempTargetView.style.display = "none";
