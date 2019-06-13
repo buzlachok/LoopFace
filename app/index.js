@@ -9,6 +9,8 @@ import { vibration } from "haptics";
 
 // Initialize
 var lastValueDate = new Date(2018,1,1);
+const second = 1000;
+const minute = 60 * second;
 
 
 // CHANGE PAGES
@@ -134,29 +136,34 @@ clock.granularity = "minutes";
 // Update the the clockface every tick with the current time
 clock.ontick = (evt) => {
   //aks companion for new values from nightscout
-  minutesAgoDisplay.style.fill = "orange";
-  sendMessage({"getValues": true});
-  
-  let today = evt.date;
-  let hours = today.getHours();
-  if (preferences.clockDisplay === "12h") {
+    let currTime = new Date();
+    let lastValue= Date.parse(lastValueDate);
+    // update values from nightscout if last value is more than 4 minutes ago
+    if (currTime - lastValue > 4 * minute){
+        console.log("send update from nightscout request to companion");
+        minutesAgoDisplay.style.fill = "orange";
+        sendMessage({"getValues": true});
+    }
+
+    let today = evt.date;
+    let hours = today.getHours();
+    if (preferences.clockDisplay === "12h") {
     // 12h format
     hours = hours % 12 || 12;
-  } else {
+    } else {
     // 24h format
     hours = util.zeroPad(hours);
-  }
-  let mins = util.zeroPad(today.getMinutes());
-  //update clock
-  clockDisplay.text = `${hours}:${mins}`;
-  
-  //update minutes since last value
-  try {
-    minutesAgoDisplay.text = calculateMinutesAgo(lastValueDate) + "m";
-  } catch (err) {
-    console.log(err);
-  }
+    }
+    let mins = util.zeroPad(today.getMinutes());
+    //update clock
+    clockDisplay.text = `${hours}:${mins}`;
 
+    //update minutes since last value
+    try {
+    minutesAgoDisplay.text = calculateMinutesAgo(lastValueDate) + "m";
+    } catch (err) {
+    console.log(err);
+    }
 };
 
 function calculateMinutesAgo(date){
