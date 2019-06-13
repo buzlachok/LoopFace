@@ -80,6 +80,7 @@ messaging.peerSocket.onmessage = (evt) => {
       cobDisplay.text = evt.data["cob"];
       lastValueDate = evt.data["dateOfValue"];
       minutesAgoDisplay.text = calculateMinutesAgo(lastValueDate) + "m";
+      minutesAgoDisplay.style.fill = "white";
     } catch (err) {
       console.log("couldn't update clockface from nightscout data");
     }
@@ -133,6 +134,7 @@ clock.granularity = "minutes";
 // Update the the clockface every tick with the current time
 clock.ontick = (evt) => {
   //aks companion for new values from nightscout
+  minutesAgoDisplay.style.fill = "orange";
   sendMessage({"getValues": true});
   
   let today = evt.date;
