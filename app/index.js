@@ -5,6 +5,7 @@ import * as util from "../common/utils";
 import * as messaging from "messaging";
 import { battery } from "power";
 import { charger } from "power";
+import { vibration } from "haptics";
 
 // Initialize
 var lastValueDate;
@@ -17,7 +18,6 @@ const carbsViewBack = document.getElementById("backButton");
 const changeToTempTargetView = document.getElementById("changeToTempTargetView");
 const tempTargetView = document.getElementById("tempTargetView");
 const backFromTargetView = tempTargetView.getElementById("backTargetButton");
-const debugBack = document.getElementById("bannerTarget");
 
 
 cobIcon.onclick = function(evt){
@@ -265,8 +265,13 @@ function showConfirmPopup(carbsOrTarget) {
   btnRight.onclick = function(evt) {
     confirm.style.display = "none";
     if (carbsOrTarget == "carbs") {
+        isOkDisplay.text = "wait";
+        isOkDisplay.style.display ="inline";
+        carbDisplay.style.display = "none";
         sendCarbs();
     } else {
+        targetDisplay.text = "wait";
+        targetMinutesDisplay.text = "";
         sendTempTarget();
     }
   }
@@ -307,10 +312,12 @@ function showIfCarbsUploaded(data){
     isOkDisplay.style.display = "inline";
     carbDisplay.style.display = "none";
     carbsViewBackground.style.fill = "green";
+    vibration.start("confirmation");
     setTimeout(function() {
       isOkDisplay.style.display = "none";
       carbDisplay.style.display = "inline";
       carbsViewBackground.style.fill = "white";
+      vibration.stop();
     }, 3000);
   }
   //go back to main view
@@ -393,16 +400,26 @@ function sendTempTarget() {
 function showIfTempTargetSet(data) {
     let tempTargetBackground = document.getElementById("tempTargetBackground");
     if (data["isOk"] == false) {
+        targetDisplay.text = "err";
+        targetMinutesDisplay.text = "";
         tempTargetBackground.style.fill = "red";
         setTimeout(function() {
             tempTargetBackground.style.fill = "white";
             tempTargetView.style.display = "none";
+            targetDisplay.text = target;
+            targetMinutesDisplay.text = targetMinutes;
         }, 3000);
     } else {
         tempTargetBackground.style.fill = "green";
+        targetDisplay.text = "ok";
+        targetMinutesDisplay.text = "";
+        vibration.start("confirmation");
         setTimeout(function() {
             tempTargetBackground.style.fill = "white";
             tempTargetView.style.display = "none";
+            targetDisplay.text = target;
+            targetMinutesDisplay.text = targetMinutes;
+            vibration.stop();
         }, 3000);
     }
 }

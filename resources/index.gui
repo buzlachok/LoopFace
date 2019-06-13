@@ -79,9 +79,9 @@
         <set href="#text" attributeName="fill" to="black" />
       </use>
 
-      <text id="target" x="50%" y="125" text-anchor="middle" text-length="3">100</text>
+      <text id="target" x="50%" y="125" text-anchor="middle" text-length="5">100</text>
 
-      <text id="targetMinutes" x="50%" y="200" text-anchor="middle" text-length="4">60m</text>
+      <text id="targetMinutes" x="50%" y="200" text-anchor="middle" text-length="5">60m</text>
 
       <use id="minusTarget" href="#square-button" x="5" y="75" height="75" width="75" fill="black" pointer-events="visible">
         <set href="#text" attributeName="text-buffer" to="-" />
