@@ -4,8 +4,24 @@ import { me } from "companion";
 
 //
 const second = 1000;
+const minute = 60 * second;
 
-//DEBUG
+//Periodic wake
+me.wakeInterval = 5 * minute;
+
+me.onwakeinterval = evt => {
+  console.log("Companion was already awake - onwakeinterval");
+  queryNightscout();
+};
+
+if (me.launchReasons.wokenUp) {
+  // The companion started due to a periodic timer
+  /**
+   * don't update if companion wasn't awake already for performance -
+   * companion gets started every time the display is turned on
+    */
+  console.log("Started due to wake interval!");
+}
 
 
 //Initialize
