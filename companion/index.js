@@ -16,11 +16,8 @@ me.onwakeinterval = evt => {
 
 if (me.launchReasons.wokenUp) {
   // The companion started due to a periodic timer
-  /**
-   * don't update if companion wasn't awake already for performance -
-   * companion gets started every time the display is turned on
-    */
   console.log("Started due to wake interval!");
+  queryNightscout();
 }
 
 
@@ -142,18 +139,20 @@ function parseNsData(data){
   let iobRound;
   let cobRound;
   let dateOfValue;
+  let newlyAddedInsulin;
   nightscoutData = null;
   let i = 0;
   while(nightscoutData == null && i <= 10) {
     try {
       //minutesSinceValue = calculateMinutesAgo(data[0]["openaps"]["suggested"]["timestamp"]);
+      newlyAddedInsulin = parseFloat(data[i]["openaps"]["suggested"]["units"]);
       iobRound = Math.round(data[i]["openaps"]["suggested"]["IOB"] * 10) / 10.0;
       cobRound = Math.round(data[i]["openaps"]["suggested"]["COB"] * 10) / 10.0;
       dateOfValue = data[i]["openaps"]["suggested"]["timestamp"];
       nightscoutData = {
         "type": "nightscout",
         "bg": data[i]["openaps"]["suggested"]["bg"],
-        "iob": iobRound,
+        "iob": iobRound + newlyAddedInsulin,
         "cob": cobRound,
         "tick": data[i]["openaps"]["suggested"]["tick"],
         "dateOfValue": dateOfValue

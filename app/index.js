@@ -13,6 +13,7 @@ const second = 1000;
 const minute = 60 * second;
 
 
+
 // CHANGE PAGES
 const cobIcon = document.getElementById("changeToCarbsView");
 const carbsViewElements = document.getElementsByClassName("carbsView");
@@ -140,7 +141,7 @@ clock.ontick = (evt) => {
     let lastValue= Date.parse(lastValueDate);
     // update values from nightscout if last value is more than 4 minutes ago
     if (currTime - lastValue > 4 * minute){
-        console.log("send update from nightscout request to companion");
+        console.log("Request update from nightscout to companion");
         minutesAgoDisplay.style.fill = "orange";
         sendMessage({"getValues": true});
     }
@@ -439,3 +440,22 @@ function showIfTempTargetSet(data) {
         }, 3000);
     }
 }
+
+
+// // Show heart rate
+// var heartrate = 0;
+//
+// if (HeartRateSensor) {
+//     const hrm = new HeartRateSensor();
+//     hrm.addEventListener("reading", () => {
+//         heartrate = hrm.heartRate;
+//         console.log(`Current heart rate: ${hrm.heartRate}`);
+//     });
+//     hrm.start();
+// } else {
+//     console.log("This device does NOT have a HeartRateSensor!");
+// }
+//
+// bgDisplay.onclick = function(evt) {
+//     // Show heart rate somewhere
+// };
