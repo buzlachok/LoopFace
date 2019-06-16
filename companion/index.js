@@ -146,13 +146,13 @@ function parseNsData(data){
     try {
       //minutesSinceValue = calculateMinutesAgo(data[0]["openaps"]["suggested"]["timestamp"]);
       newlyAddedInsulin = parseFloat(data[i]["openaps"]["suggested"]["units"]);
-      iobRound = Math.round(data[i]["openaps"]["suggested"]["IOB"] * 10) / 10.0;
+      iobRound = parseFloat(data[i]["openaps"]["suggested"]["IOB"]);
       cobRound = Math.round(data[i]["openaps"]["suggested"]["COB"] * 10) / 10.0;
       dateOfValue = data[i]["openaps"]["suggested"]["timestamp"];
       nightscoutData = {
         "type": "nightscout",
         "bg": data[i]["openaps"]["suggested"]["bg"],
-        "iob": iobRound + newlyAddedInsulin,
+        "iob": Math.round((iobRound + newlyAddedInsulin)*10) / 10.0,
         "cob": cobRound,
         "tick": data[i]["openaps"]["suggested"]["tick"],
         "dateOfValue": dateOfValue
