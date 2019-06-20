@@ -145,7 +145,11 @@ function parseNsData(data){
   while(nightscoutData == null && i <= 10) {
     try {
       //minutesSinceValue = calculateMinutesAgo(data[0]["openaps"]["suggested"]["timestamp"]);
-      newlyAddedInsulin = parseFloat(data[i]["openaps"]["suggested"]["units"]);
+      if(data[i]["openaps"]["suggested"]["units"]){
+        newlyAddedInsulin = parseFloat(data[i]["openaps"]["suggested"]["units"]);
+      } else {
+        newlyAddedInsulin = 0.0;
+      }
       iobRound = parseFloat(data[i]["openaps"]["suggested"]["IOB"]);
       cobRound = Math.round(data[i]["openaps"]["suggested"]["COB"] * 10) / 10.0;
       dateOfValue = data[i]["openaps"]["suggested"]["timestamp"];

@@ -372,7 +372,7 @@ plusTimeTarget.onclick = function(evt) {
 };
 
 minusTarget.onclick = function(evt) {
-  if(target >= 75){
+  if(target >= 80){
     target = target - 5;
   }
   updateTargetDisplay();
